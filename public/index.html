@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoltReserve | Intelligent EV Charging Network</title>
+    <meta name="description" content="Seamless electric vehicle charging station slot reservations, real-time bay availability, and fast booking.">
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- App Container -->
+    <div id="app" class="app-layout">
+        
+        <!-- TOP NAVIGATION BAR -->
+        <header class="navbar" id="main-nav">
+            <div class="nav-left">
+                <div class="brand">
+                    <div class="brand-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </div>
+                    <div class="brand-text">
+                        <span class="brand-title">VoltReserve</span>
+                        <span class="brand-badge">Charging Network</span>
+                    </div>
+                </div>
+
+                <!-- Live Network Status Counters -->
+                <div class="network-pulse-strip" id="network-pulse">
+                    <div class="pulse-chip" title="Live Charging Stations">
+                        <span class="status-dot green pulse"></span>
+                        <span class="chip-val" id="stat-stations">6</span>
+                        <span class="chip-label">Stations</span>
+                    </div>
+                    <div class="pulse-chip" title="Available Slots in Network">
+                        <span class="chip-icon">⚡</span>
+                        <span class="chip-val" id="stat-slots">19/21</span>
+                        <span class="chip-label">Slots Free</span>
+                    </div>
+                    <div class="pulse-chip" title="Clean Energy Dispensed">
+                        <span class="chip-icon">🔋</span>
+                        <span class="chip-val" id="stat-energy">137.0</span>
+                        <span class="chip-label">kWh Delivered</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-right">
+                <!-- User Profile & Wallet -->
+                <div class="user-chip" id="user-wallet-chip">
+                    <div class="user-avatar" id="user-avatar">RS</div>
+                    <div class="user-details">
+                        <span class="user-name" id="user-name-display">Rahul Sharma</span>
+                        <span class="wallet-badge">
+                            Wallet: <strong id="user-wallet-balance">₹1,500.00</strong>
+                        </span>
+                    </div>
+                    <button class="btn-wallet-topup" id="btn-open-wallet-modal" title="Add money to your charging wallet">
+                        + Add Funds
+                    </button>
+                </div>
+
+                <!-- Quick Database Controls -->
+                <button class="btn btn-secondary btn-sm" id="btn-quick-reset" title="Reset SQLite database with initial seed data">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                    </svg>
+                    <span>Reset DB</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN NAVIGATION TABS -->
+        <nav class="nav-tabs" aria-label="Main Navigation">
+            <button class="tab-btn active" data-tab="tab-explore" id="tab-btn-explore">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                </svg>
+                <span>Station Explorer &amp; Booking</span>
+            </button>
+            <button class="tab-btn" data-tab="tab-bookings" id="tab-btn-bookings">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>My Bookings &amp; Bay Monitor</span>
+            </button>
+        </nav>
+
+        <!-- MAIN VIEWPORTS -->
+        <main class="main-content" id="main-content">
+
+            <!-- ======================================================== -->
+            <!-- TAB 1: STATION EXPLORER & SLOT BOOKING -->
+            <!-- ======================================================== -->
+            <section class="tab-pane active" id="tab-explore">
+                
+                <!-- LUXURY EDITORIAL HERO SECTION -->
+                <div class="hero-section">
+                    <div class="hero-content">
+                        <div class="hero-pill">
+                            <span class="hero-pill-dot"></span>
+                            <span>Ultra-Fast High-Voltage Charging Network</span>
+                        </div>
+                        <h1 class="hero-headline">
+                            Intelligent EV Charging,<br>
+                            <span class="hero-gradient-text">Reserved In Seconds.</span>
+                        </h1>
+                        <p class="hero-subline">
+                            Guaranteed parking bay reservations, live hardware telemetry, and up to 150 kW DC rapid charging across India's key metropolitan corridors.
+                        </p>
+                        
+                        <!-- Quick Highlights Grid -->
+                        <div class="hero-stats-row">
+                            <div class="hero-stat-card">
+                                <span class="stat-big">150<small>kW</small></span>
+                                <span class="stat-sub">Peak DC Output</span>
+                            </div>
+                            <div class="hero-stat-card">
+                                <span class="stat-big">0<small>min</small></span>
+                                <span class="stat-sub">Wait with Booking</span>
+                            </div>
+                            <div class="hero-stat-card">
+                                <span class="stat-big">99.8<small>%</small></span>
+                                <span class="stat-sub">Grid Uptime</span>
+                            </div>
+                            <div class="hero-stat-card">
+                                <span class="stat-big">100<small>%</small></span>
+                                <span class="stat-sub">Solar &amp; Wind Energy</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Interactive Hardware Telemetry Dispenser HUD (No raster images) -->
+                    <div class="hero-visual">
+                        <div class="telemetry-terminal-card">
+                            <div class="terminal-topbar">
+                                <div class="terminal-status-badge">
+                                    <span class="telemetry-live-dot pulse"></span>
+                                    <span>DISPENSER #VR-150-ALPHA</span>
+                                </div>
+                                <span class="terminal-protocol-tag">800V DC ULTRA-FAST</span>
+                            </div>
+
+                            <div class="soc-gauge-container">
+                                <svg class="soc-circle-svg" viewBox="0 0 160 160">
+                                    <circle class="soc-track" cx="80" cy="80" r="66"></circle>
+                                    <circle class="soc-fill" cx="80" cy="80" r="66" stroke-dasharray="414" stroke-dashoffset="74"></circle>
+                                </svg>
+                                <div class="soc-center-info">
+                                    <span class="soc-percent">82<small>%</small></span>
+                                    <span class="soc-label">STATE OF CHARGE</span>
+                                    <span class="soc-kwh">+48.6 kWh</span>
+                                </div>
+                            </div>
+
+                            <div class="terminal-telemetry-grid">
+                                <div class="telemetry-cell">
+                                    <span class="t-label">FLOW RATE</span>
+                                    <strong class="t-val green">142.8 <small>kW</small></strong>
+                                </div>
+                                <div class="telemetry-cell">
+                                    <span class="t-label">LINE VOLTAGE</span>
+                                    <strong class="t-val">794 <small>V</small></strong>
+                                </div>
+                                <div class="telemetry-cell">
+                                    <span class="t-label">CURRENT</span>
+                                    <strong class="t-val">180 <small>A</small></strong>
+                                </div>
+                                <div class="telemetry-cell">
+                                    <span class="t-label">SESSION TIME</span>
+                                    <strong class="t-val">24m 18s</strong>
+                                </div>
+                            </div>
+
+                            <div class="terminal-bottom-strip">
+                                <div class="vehicle-plug-info">
+                                    <span class="plug-icon">⚡</span>
+                                    <div class="plug-text">
+                                        <strong>Indiranagar HyperHub • Bay 1A</strong>
+                                        <span>Connected: Tata Nexon EV Max (KA-01-MJ-2024)</span>
+                                    </div>
+                                </div>
+                                <span class="terminal-lock-badge">LOCKED &amp; ACTIVE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search & Filter Ribbon -->
+                <div class="glass-panel filter-panel">
+                    <div class="filter-top">
+                        <div class="search-box">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="station-search-input" placeholder="Search by station name, highway, landmark, or operator...">
+                        </div>
+                        <div class="filter-dropdowns">
+                            <select id="filter-charger-type" class="form-select">
+                                <option value="All">All Charger Types</option>
+                                <option value="DC Ultra-Fast">DC Ultra-Fast (120-150kW)</option>
+                                <option value="DC Fast">DC Fast (50-60kW)</option>
+                                <option value="Level 2 AC">Level 2 AC (11-22kW)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- City Fast Filter Chips & View Mode Switcher -->
+                    <div class="filter-bottom-row">
+                        <div class="city-chips" id="city-chips-container">
+                            <span class="chip-label-txt">Metro Hubs:</span>
+                            <button class="city-chip active" data-city="All">All Cities</button>
+                            <button class="city-chip" data-city="Bengaluru">Bengaluru</button>
+                            <button class="city-chip" data-city="Mumbai">Mumbai</button>
+                            <button class="city-chip" data-city="Delhi">Delhi</button>
+                            <button class="city-chip" data-city="Hyderabad">Hyderabad</button>
+                            <button class="city-chip" data-city="Pune">Pune</button>
+                        </div>
+
+                        <!-- View Switcher -->
+                        <div class="view-switcher-group">
+                            <button class="view-btn active" id="btn-view-grid" title="Station Grid View">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="14" width="7" height="7"></rect>
+                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                </svg>
+                                <span>Grid</span>
+                            </button>
+                            <button class="view-btn" id="btn-view-map" title="Interactive Metro Radar Map">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                                    <line x1="8" y1="2" x2="8" y2="18"></line>
+                                    <line x1="16" y1="6" x2="16" y2="22"></line>
+                                </svg>
+                                <span>Radar Map</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INTERACTIVE METRO RADAR MAP (Collapsible / Toggleable) -->
+                <div class="metro-map-panel hidden" id="metro-radar-map-panel">
+                    <div class="map-header">
+                        <div>
+                            <h3 class="map-title">Interactive Metro Hub Network</h3>
+                            <p class="map-desc">Click any city radar beacon to instantly filter nearby stations and bay capacity</p>
+                        </div>
+                        <div class="map-legend">
+                            <span class="legend-item"><span class="legend-dot green"></span> Live Station Hub</span>
+                            <span class="legend-item"><span class="legend-dot lime"></span> High Capacity Available</span>
+                        </div>
+                    </div>
+
+                    <div class="radar-map-canvas-wrapper">
+                        <!-- Stylized SVG Map of India Metro Corridor -->
+                        <svg class="radar-svg-map" viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Background Map Grids & Connection Highways -->
+                            <defs>
+                                <radialGradient id="beaconGlow" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" stop-color="#c8f135" stop-opacity="0.8"/>
+                                    <stop offset="100%" stop-color="#c8f135" stop-opacity="0"/>
+                                </radialGradient>
+                            </defs>
+
+                            <!-- Highway Arteries connecting Metro Hubs -->
+                            <line x1="380" y1="90" x2="250" y2="230" stroke="rgba(255,255,255,0.08)" stroke-width="2" stroke-dasharray="4,4" />
+                            <line x1="250" y1="230" x2="310" y2="280" stroke="rgba(255,255,255,0.12)" stroke-width="2" />
+                            <line x1="310" y1="280" x2="480" y2="260" stroke="rgba(255,255,255,0.08)" stroke-width="2" stroke-dasharray="4,4" />
+                            <line x1="480" y1="260" x2="420" y2="380" stroke="rgba(255,255,255,0.12)" stroke-width="2" />
+                            <line x1="310" y1="280" x2="420" y2="380" stroke="rgba(255,255,255,0.12)" stroke-width="2" />
+
+                            <!-- 1. Delhi Hub -->
+                            <g class="map-pin-group" data-city="Delhi" onclick="BookingModule.filterByMapCity('Delhi')">
+                                <circle cx="380" cy="90" r="32" fill="url(#beaconGlow)" opacity="0.3"/>
+                                <circle cx="380" cy="90" r="7" fill="#c8f135"/>
+                                <text x="400" y="95" class="map-label">DELHI NCR</text>
+                                <text x="400" y="112" class="map-sublabel">1 Station • 3 Slots</text>
+                            </g>
+
+                            <!-- 2. Mumbai Hub -->
+                            <g class="map-pin-group" data-city="Mumbai" onclick="BookingModule.filterByMapCity('Mumbai')">
+                                <circle cx="250" cy="230" r="32" fill="url(#beaconGlow)" opacity="0.3"/>
+                                <circle cx="250" cy="230" r="7" fill="#c8f135"/>
+                                <text x="140" y="235" class="map-label">MUMBAI BKC</text>
+                                <text x="140" y="252" class="map-sublabel">1 Station • 4 Slots</text>
+                            </g>
+
+                            <!-- 3. Pune Hub -->
+                            <g class="map-pin-group" data-city="Pune" onclick="BookingModule.filterByMapCity('Pune')">
+                                <circle cx="310" cy="280" r="28" fill="url(#beaconGlow)" opacity="0.3"/>
+                                <circle cx="310" cy="280" r="6" fill="#c8f135"/>
+                                <text x="325" y="285" class="map-label">PUNE</text>
+                                <text x="325" y="302" class="map-sublabel">1 Station • 2 Slots</text>
+                            </g>
+
+                            <!-- 4. Hyderabad Hub -->
+                            <g class="map-pin-group" data-city="Hyderabad" onclick="BookingModule.filterByMapCity('Hyderabad')">
+                                <circle cx="480" cy="260" r="32" fill="url(#beaconGlow)" opacity="0.3"/>
+                                <circle cx="480" cy="260" r="7" fill="#c8f135"/>
+                                <text x="500" y="265" class="map-label">HYDERABAD</text>
+                                <text x="500" y="282" class="map-sublabel">1 Station • 3 Slots</text>
+                            </g>
+
+                            <!-- 5. Bengaluru Hub (Hyper Corridor) -->
+                            <g class="map-pin-group" data-city="Bengaluru" onclick="BookingModule.filterByMapCity('Bengaluru')">
+                                <circle cx="420" cy="380" r="38" fill="url(#beaconGlow)" opacity="0.4"/>
+                                <circle cx="420" cy="380" r="8" fill="#c8f135"/>
+                                <text x="440" y="380" class="map-label highlight">BENGALURU HUB</text>
+                                <text x="440" y="398" class="map-sublabel">2 Stations • 9 Slots (Prime)</text>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Station Cards Grid -->
+                <div class="stations-header">
+                    <h2 class="section-title">Verified Charging Locations</h2>
+                    <span class="section-subtitle" id="stations-count-badge">Found 6 Stations</span>
+                </div>
+
+                <div class="station-grid" id="stations-grid">
+                    <!-- Populated dynamically via JS -->
+                    <div class="loading-spinner-wrapper">
+                        <div class="spinner"></div>
+                        <p>Querying verified station network...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- TAB 2: MY BOOKINGS & BAY MONITOR -->
+            <!-- ======================================================== -->
+            <section class="tab-pane" id="tab-bookings">
+                <div class="bookings-header">
+                    <div>
+                        <h2 class="section-title">My EV Slot Reservations</h2>
+                        <p class="section-subtitle">Real-time status of reserved charging bays, active charging sessions, and digital boarding tickets</p>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" id="btn-refresh-bookings">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                        </svg>
+                        <span>Refresh Bookings</span>
+                    </button>
+                </div>
+
+                <!-- Bookings Table / Cards Container -->
+                <div class="bookings-list" id="bookings-list-container">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ======================================================== -->
+        <!-- MODAL 1: SLOT BOOKING DRAWER / MODAL -->
+        <!-- ======================================================== -->
+        <div class="modal-backdrop hidden" id="booking-modal">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <div>
+                        <h3 class="modal-title" id="modal-station-name">Reserve Charging Bay</h3>
+                        <p class="modal-subtitle" id="modal-station-location">Indiranagar, Bengaluru</p>
+                    </div>
+                    <button class="modal-close-btn" id="btn-close-booking-modal">✕</button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- Step 1: Select Charger & Bay -->
+                    <div class="booking-section">
+                        <label class="section-label">1. Choose Charger Pillar &amp; Parking Bay</label>
+                        <div class="charger-bay-selector" id="modal-chargers-container">
+                            <!-- Populated with live slots -->
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Vehicle & Energy -->
+                    <div class="booking-section form-row-2">
+                        <div class="form-group">
+                            <label class="section-label" for="booking-vehicle-select">2. Select Your EV</label>
+                            <select id="booking-vehicle-select" class="form-select">
+                                <!-- Populated dynamically from vehicles table -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="section-label" for="booking-energy-slider">
+                                3. Target Energy: <strong id="energy-val-display" class="highlight-val">30 kWh</strong>
+                            </label>
+                            <input type="range" id="booking-energy-slider" min="5" max="80" step="5" value="30" class="form-range">
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Time Slot Window -->
+                    <div class="booking-section form-row-2">
+                        <div class="form-group">
+                            <label class="section-label" for="booking-start-time">4. Start Time</label>
+                            <input type="datetime-local" id="booking-start-time" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="section-label" for="booking-duration-select">Duration Window</label>
+                            <select id="booking-duration-select" class="form-select">
+                                <option value="30">30 Minutes (Quick Top-up)</option>
+                                <option value="60" selected>60 Minutes (Standard Fast Charge)</option>
+                                <option value="90">90 Minutes (Full Pack DC)</option>
+                                <option value="120">120 Minutes (AC Slow Charge)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Payment Method -->
+                    <div class="booking-section">
+                        <label class="section-label">5. Payment Method</label>
+                        <div class="payment-options">
+                            <label class="payment-radio">
+                                <input type="radio" name="payment-method" value="Wallet" checked>
+                                <span class="radio-label">Driver Wallet (Bal: <span id="modal-wallet-balance">₹1,500.00</span>)</span>
+                            </label>
+                            <label class="payment-radio">
+                                <input type="radio" name="payment-method" value="UPI">
+                                <span class="radio-label">UPI / Instant QR</span>
+                            </label>
+                            <label class="payment-radio">
+                                <input type="radio" name="payment-method" value="Credit Card">
+                                <span class="radio-label">Credit / Debit Card</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Estimated Summary Box -->
+                    <div class="bill-summary-card">
+                        <div class="bill-row">
+                            <span>Charging Tariff Rate:</span>
+                            <strong id="modal-rate-display">₹18.00 / kWh</strong>
+                        </div>
+                        <div class="bill-row">
+                            <span>Estimated Energy Consumption:</span>
+                            <span id="modal-energy-display">30.0 kWh</span>
+                        </div>
+                        <div class="bill-divider"></div>
+                        <div class="bill-row total">
+                            <span>Total Estimated Payable:</span>
+                            <strong class="total-amount" id="modal-total-display">₹540.00</strong>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="btn-cancel-modal">Cancel</button>
+                    <button class="btn btn-primary" id="btn-confirm-booking">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Confirm &amp; Reserve Bay</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- MODAL 2: WALLET TOP-UP MODAL -->
+        <!-- ======================================================== -->
+        <div class="modal-backdrop hidden" id="wallet-modal">
+            <div class="modal-card modal-card-sm">
+                <div class="modal-header">
+                    <div>
+                        <h3 class="modal-title">Recharge Driver Wallet</h3>
+                        <p class="modal-subtitle">Instant balance for seamless bay charging</p>
+                    </div>
+                    <button class="modal-close-btn" id="btn-close-wallet-modal">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="wallet-balance-box">
+                        <span class="wallet-balance-label">Current Balance</span>
+                        <span class="wallet-balance-val" id="topup-current-balance">₹1,500.00</span>
+                    </div>
+
+                    <div class="booking-section">
+                        <label class="section-label">Select Recharge Amount</label>
+                        <div class="recharge-presets">
+                            <button class="preset-btn" data-amt="500">+ ₹500</button>
+                            <button class="preset-btn active" data-amt="1000">+ ₹1,000</button>
+                            <button class="preset-btn" data-amt="2000">+ ₹2,000</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="btn-cancel-wallet-modal">Cancel</button>
+                    <button class="btn btn-primary" id="btn-submit-wallet-topup">
+                        Confirm Top-Up (₹1,000)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- MODAL 3: DIGITAL BOARDING PASS / QR TICKET -->
+        <!-- ======================================================== -->
+        <div class="modal-backdrop hidden" id="ticket-modal">
+            <div class="modal-card modal-card-sm">
+                <div class="modal-header">
+                    <div>
+                        <h3 class="modal-title">Digital Bay Pass</h3>
+                        <p class="modal-subtitle">Scan at charging dispenser pillar</p>
+                    </div>
+                    <button class="modal-close-btn" id="btn-close-ticket-modal">✕</button>
+                </div>
+                <div class="modal-body ticket-body">
+                    <div class="digital-ticket-card">
+                        <div class="ticket-header-row">
+                            <span class="ticket-id" id="ticket-reservation-id">RESERVATION #2026</span>
+                            <span class="badge badge-success" id="ticket-status-badge">Confirmed</span>
+                        </div>
+                        <h3 class="ticket-station" id="ticket-station-name">Zeon HyperHub Indiranagar</h3>
+                        <div class="ticket-bay-badge" id="ticket-bay-name">Bay 1A (Ultra DC)</div>
+
+                        <div class="ticket-qr-box">
+                            <!-- High-contrast SVG QR Code Representation -->
+                            <svg class="qr-svg" viewBox="0 0 120 120" width="120" height="120">
+                                <rect width="120" height="120" fill="#ffffff" rx="8"/>
+                                <path d="M12 12h32v32H12z M20 20v16h16V20z M24 24h8v8h-8z" fill="#000000"/>
+                                <path d="M76 12h32v32H76z M84 20v16h16V20z M88 24h8v8h-8z" fill="#000000"/>
+                                <path d="M12 76h32v32H12z M20 84v16h16V84z M24 88h8v8h-8z" fill="#000000"/>
+                                <circle cx="60" cy="60" r="12" fill="#c8f135"/>
+                                <path d="M60 12v20 M76 60h32 M60 76v32 M12 60h24" stroke="#000000" stroke-width="4"/>
+                            </svg>
+                            <span class="qr-hint">Scan at bay scanner to initiate charging gun</span>
+                        </div>
+
+                        <div class="ticket-meta-grid">
+                            <div class="ticket-meta-cell">
+                                <span class="meta-label">Vehicle</span>
+                                <strong id="ticket-vehicle-plate">KA-01-MJ-2024</strong>
+                            </div>
+                            <div class="ticket-meta-cell">
+                                <span class="meta-label">Start Time</span>
+                                <strong id="ticket-time-window">10:00 AM</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="btn-close-ticket-btn">Close Pass</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOAST NOTIFICATION CONTAINER -->
+        <div class="toast-container" id="toast-container"></div>
+
+    </div>
+
+    <!-- App Scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/booking.js"></script>
+</body>
+</html>
