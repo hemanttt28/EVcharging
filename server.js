@@ -504,6 +504,6 @@ app.post('/api/db/reset', (req, res) => {
 // Initialize database on startup
 initDb();
 
-app.listen(PORT, () => {
-    console.log(`[EV-DBMS SERVER] Running at http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`[EV-DBMS SERVER] Running at http://0.0.0.0:${PORT}`);
 });
